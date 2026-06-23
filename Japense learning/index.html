@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Offline Japanese phrasebook for travel and business">
+  <meta name="theme-color" content="#1c1c1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Japan Kit">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <title>Japan Phrase Kit</title>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Status bar -->
+  <div id="status-bar">
+    <span id="status-dot"></span>
+    <span id="status-text">Checking...</span>
+  </div>
+
+  <!-- ============ HOME VIEW ============ -->
+  <div id="view-home" class="view active">
+    <div class="view-header">
+      <h1 class="app-title">Japan Phrase Kit</h1>
+      <p class="app-subtitle">日本語フレーズブック</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="search" id="home-search" class="search-input" placeholder="Search phrases, romaji, English..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+
+    <div id="home-search-results" class="phrase-list hidden"></div>
+
+    <div id="home-stats" class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total Phrases</div>
+      </div>
+      <div class="stat-card stat-personal" id="stat-personal-card">
+        <div class="stat-num" id="stat-personal">0</div>
+        <div class="stat-label">Personal</div>
+      </div>
+      <div class="stat-card stat-business" id="stat-business-card">
+        <div class="stat-num" id="stat-business">0</div>
+        <div class="stat-label">Business</div>
+      </div>
+      <div class="stat-card stat-fav" id="stat-fav-card">
+        <div class="stat-num" id="stat-favorites">0</div>
+        <div class="stat-label">Favorites</div>
+      </div>
+    </div>
+
+    <div class="section-label">Quick Access</div>
+    <div class="quick-grid">
+      <button class="quick-btn" data-section="Personal" data-category="Conversation Repair">Conversation Repair</button>
+      <button class="quick-btn" data-section="Personal" data-category="Restaurant">Restaurant</button>
+      <button class="quick-btn" data-section="Personal" data-category="Directions">Directions</button>
+      <button class="quick-btn" data-section="Business" data-category="Work Intro">Business Intro</button>
+      <button class="quick-btn" data-section="Business" data-category="Combat Reviews">Combat Reviews</button>
+      <button class="quick-btn" data-section="Business" data-category="Noise">Noise</button>
+    </div>
+
+    <div class="section-label">Practice</div>
+    <button class="continue-btn" id="continue-practice-btn">Start Flashcard Practice</button>
+  </div>
+
+  <!-- ============ PERSONAL VIEW ============ -->
+  <div id="view-personal" class="view">
+    <div class="view-header sticky-header">
+      <h2 class="view-title">Personal</h2>
+      <p class="view-subtitle">Travel &amp; conversation phrases</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="search" id="personal-search" class="search-input" placeholder="Search personal phrases..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+
+    <div class="filter-scroll">
+      <button class="filter-chip active" data-filter="all" data-view="personal">All</button>
+      <button class="filter-chip" data-filter="category:Conversation Repair" data-view="personal">Conversation Repair</button>
+      <button class="filter-chip" data-filter="category:Conversation Flow" data-view="personal">Conversation Flow</button>
+      <button class="filter-chip" data-filter="category:Intro" data-view="personal">Intro</button>
+      <button class="filter-chip" data-filter="category:Recommendations" data-view="personal">Recommendations</button>
+      <button class="filter-chip" data-filter="category:Restaurant" data-view="personal">Restaurant</button>
+      <button class="filter-chip" data-filter="category:Convenience Store" data-view="personal">Konbini</button>
+      <button class="filter-chip" data-filter="category:Directions" data-view="personal">Directions</button>
+      <button class="filter-chip" data-filter="category:Airport/Plane" data-view="personal">Airport/Plane</button>
+      <button class="filter-chip" data-filter="category:Hotel" data-view="personal">Hotel</button>
+      <button class="filter-chip" data-filter="category:Shopping" data-view="personal">Shopping</button>
+      <button class="filter-chip" data-filter="category:Emergency" data-view="personal">Emergency</button>
+      <button class="filter-chip" data-filter="category:Family/Friends" data-view="personal">Family/Friends</button>
+      <button class="filter-chip" data-filter="favorites" data-view="personal">Favorites</button>
+    </div>
+
+    <div id="personal-phrase-list" class="phrase-list"></div>
+  </div>
+
+  <!-- ============ BUSINESS VIEW ============ -->
+  <div id="view-business" class="view">
+    <div class="view-header sticky-header">
+      <h2 class="view-title">Business</h2>
+      <p class="view-subtitle">Startup &amp; professional phrases</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="search" id="business-search" class="search-input" placeholder="Search business phrases..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+
+    <div class="filter-scroll">
+      <button class="filter-chip active" data-filter="all" data-view="business">All</button>
+      <button class="filter-chip" data-filter="category:Work Intro" data-view="business">Work Intro</button>
+      <button class="filter-chip" data-filter="category:Combat Reviews" data-view="business">Combat Reviews</button>
+      <button class="filter-chip" data-filter="category:Noise" data-view="business">Noise</button>
+      <button class="filter-chip" data-filter="category:Coding / Tech" data-view="business">Coding / Tech</button>
+      <button class="filter-chip" data-filter="category:SaaS / Product" data-view="business">SaaS / Product</button>
+      <button class="filter-chip" data-filter="category:Business Conversation" data-view="business">Business Conversation</button>
+      <button class="filter-chip" data-filter="favorites" data-view="business">Favorites</button>
+    </div>
+
+    <div class="biz-level-bar">
+      <button class="biz-level-btn active" data-level="simple">Simple</button>
+      <button class="biz-level-btn" data-level="startup">Startup</button>
+      <button class="biz-level-btn" data-level="formal">Formal</button>
+    </div>
+    <div class="biz-level-desc" id="biz-level-desc">Simple — everyday plain Japanese, easy for any speaker</div>
+
+    <div id="business-phrase-list" class="phrase-list"></div>
+  </div>
+
+  <!-- ============ ADD PHRASE VIEW ============ -->
+  <div id="view-add" class="view">
+    <div class="view-header">
+      <h2 class="view-title">Add Phrase</h2>
+      <p class="view-subtitle">Save your own phrases</p>
+    </div>
+
+    <form id="add-phrase-form" class="phrase-form" novalidate>
+      <input type="hidden" id="edit-phrase-id">
+
+      <div class="form-group">
+        <label class="form-label">Section <span class="required">*</span></label>
+        <select id="form-section" class="form-select" required>
+          <option value="">Choose section...</option>
+          <option value="Personal">Personal</option>
+          <option value="Business">Business</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">English Meaning <span class="required">*</span></label>
+        <input type="text" id="form-english" class="form-input" placeholder="e.g. Can you speak slowly?" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Hiragana <span class="required">*</span></label>
+        <input type="text" id="form-hiragana" class="form-input japanese-input" placeholder="e.g. ゆっくりはなしてください" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Romaji <span class="required">*</span></label>
+        <input type="text" id="form-romaji" class="form-input" placeholder="e.g. Yukkuri hanashite kudasai" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Japanese <span class="optional">(optional)</span></label>
+        <input type="text" id="form-kanji" class="form-input japanese-input" placeholder="e.g. ゆっくり話してください">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category <span class="required">*</span></label>
+        <input type="text" id="form-category" class="form-input" placeholder="e.g. Restaurant, Directions, Work Intro" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes <span class="optional">(optional)</span></label>
+        <textarea id="form-notes" class="form-textarea" placeholder="When/how to use this phrase"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tags <span class="optional">(optional, comma separated)</span></label>
+        <input type="text" id="form-tags" class="form-input" placeholder="e.g. travel, food, emergency">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Politeness Level <span class="required">*</span></label>
+        <select id="form-politeness" class="form-select" required>
+          <option value="">Choose level...</option>
+          <option value="Casual">Casual</option>
+          <option value="Neutral">Neutral</option>
+          <option value="Polite">Polite</option>
+          <option value="Very Polite">Very Polite</option>
+        </select>
+      </div>
+
+      <div id="form-error" class="form-error hidden"></div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="form-cancel-btn">Cancel</button>
+        <button type="submit" class="btn-primary" id="form-submit-btn">Save Phrase</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ PRACTICE VIEW ============ -->
+  <div id="view-practice" class="view">
+
+    <!-- Practice setup screen -->
+    <div id="practice-setup">
+      <div class="view-header">
+        <h2 class="view-title">Practice</h2>
+        <p class="view-subtitle">Flashcard mode</p>
+      </div>
+
+      <div class="setup-section">
+        <div class="section-label">Practice Mode</div>
+        <div class="mode-list">
+          <label class="mode-option">
+            <input type="radio" name="practice-mode" value="en-to-jp" checked>
+            <span class="mode-label">English → Japanese</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-mode" value="hira-to-en">
+            <span class="mode-label">Hiragana → English</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-mode" value="romaji-to-en">
+            <span class="mode-label">Romaji → English</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <div class="section-label">Practice Set</div>
+        <div class="mode-list">
+          <label class="mode-option">
+            <input type="radio" name="practice-filter" value="all" checked>
+            <span class="mode-label">All Phrases</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-filter" value="Personal">
+            <span class="mode-label">Personal Only</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-filter" value="Business">
+            <span class="mode-label">Business Only</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-filter" value="favorites">
+            <span class="mode-label">Favorites Only</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <div class="section-label">Category (optional)</div>
+        <select id="practice-category-select" class="form-select">
+          <option value="">All categories</option>
+        </select>
+      </div>
+
+      <div class="setup-section">
+        <div class="section-label">Business Level</div>
+        <div class="mode-list">
+          <label class="mode-option">
+            <input type="radio" name="practice-biz-level" value="simple" checked>
+            <span class="mode-label">Simple — everyday plain Japanese</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-biz-level" value="startup">
+            <span class="mode-label">Startup — natural katakana-mix</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="practice-biz-level" value="formal">
+            <span class="mode-label">Formal — mature business Japanese</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-start-practice" id="start-practice-btn">Start Practice</button>
+    </div>
+
+    <!-- Flashcard screen -->
+    <div id="practice-session" class="hidden">
+      <div class="practice-progress-bar">
+        <div id="practice-progress-fill"></div>
+      </div>
+      <div class="practice-counter" id="practice-counter">1 / 10</div>
+
+      <div id="flashcard" class="flashcard" role="button" tabindex="0" aria-label="Tap to reveal answer">
+        <div id="flashcard-front" class="flashcard-front">
+          <div class="card-prompt-label" id="prompt-label">English</div>
+          <div class="card-prompt-text" id="prompt-text"></div>
+          <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div id="flashcard-back" class="flashcard-back hidden">
+          <div id="answer-english" class="answer-english"></div>
+          <div id="answer-hiragana" class="answer-hiragana"></div>
+          <div id="answer-romaji" class="answer-romaji"></div>
+          <div id="answer-kanji" class="answer-kanji"></div>
+          <div id="answer-notes" class="answer-notes"></div>
+        </div>
+      </div>
+
+      <div id="rating-buttons" class="rating-buttons hidden">
+        <button class="btn-again" data-rating="again">Again</button>
+        <button class="btn-good" data-rating="good">Good</button>
+        <button class="btn-easy" data-rating="easy">Easy</button>
+      </div>
+
+      <button class="btn-text" id="end-session-btn">End Session</button>
+    </div>
+
+    <!-- Session complete screen -->
+    <div id="practice-complete" class="hidden">
+      <div class="complete-screen">
+        <div class="complete-icon">完</div>
+        <h3 class="complete-title">Session Complete</h3>
+        <div id="session-stats" class="session-stats"></div>
+        <button class="btn-primary" id="practice-again-btn">Practice Again</button>
+        <button class="btn-secondary" id="back-to-setup-btn">Change Settings</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ SETTINGS VIEW ============ -->
+  <div id="view-settings" class="view">
+    <div class="view-header">
+      <h2 class="view-title">Settings</h2>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Display</div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <span>Show Japanese</span>
+          <span class="settings-row-sub">Show full Japanese text on cards</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-kanji" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <span>Show Romaji</span>
+          <span class="settings-row-sub">Show romaji pronunciation guide</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-romaji" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <span>Large Text Mode</span>
+          <span class="settings-row-sub">Increase all text size</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-large-text">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Data &amp; Backup</div>
+
+      <button class="settings-btn" id="export-json-btn">Export All Data as JSON</button>
+      <button class="settings-btn" id="export-csv-btn">Export as CSV</button>
+      <label class="settings-btn settings-btn-import">
+        Import JSON Backup
+        <input type="file" id="import-json-input" accept=".json" style="display:none">
+      </label>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Reset</div>
+      <button class="settings-btn settings-btn-danger" id="reset-custom-btn">Delete My Custom Phrases</button>
+      <button class="settings-btn settings-btn-danger" id="reset-stats-btn">Clear Practice Stats</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Add to Home Screen</div>
+      <div class="instructions-block">
+        <p class="instr-heading">iPhone / Safari</p>
+        <ol class="instr-list">
+          <li>Open this page in Safari</li>
+          <li>Tap the Share button (box with arrow)</li>
+          <li>Scroll down and tap "Add to Home Screen"</li>
+          <li>Tap "Add" — the app icon appears on your home screen</li>
+        </ol>
+        <p class="instr-heading">Android / Chrome</p>
+        <ol class="instr-list">
+          <li>Open this page in Chrome</li>
+          <li>Tap the three-dot menu (top right)</li>
+          <li>Tap "Add to Home Screen" or "Install App"</li>
+          <li>Tap "Add" — the app appears on your home screen</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">App Info</div>
+      <div class="app-info">
+        <div class="info-row"><span>Version</span><span>1.0</span></div>
+        <div class="info-row"><span>Phrases loaded</span><span id="info-phrase-count">—</span></div>
+        <div class="info-row"><span>Cache status</span><span id="info-cache-status">—</span></div>
+        <div class="info-row"><span>Custom phrases</span><span id="info-custom-count">—</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- end #app -->
+
+<!-- ============ BOTTOM NAV ============ -->
+<nav id="bottom-nav">
+  <button class="nav-btn active" data-view="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="nav-btn" data-view="personal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+    <span>Personal</span>
+  </button>
+  <button class="nav-btn" data-view="business">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    <span>Business</span>
+  </button>
+  <button class="nav-btn" data-view="add">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>Add</span>
+  </button>
+  <button class="nav-btn" data-view="practice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+    <span>Practice</span>
+  </button>
+  <button class="nav-btn" data-view="settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<!-- ============ CONFIRM MODAL ============ -->
+<div id="confirm-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <p class="modal-message" id="modal-message">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="modal-cancel">Cancel</button>
+      <button class="btn-danger" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

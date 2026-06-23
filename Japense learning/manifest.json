@@ -1,0 +1,32 @@
+{
+  "name": "Japan Phrase Kit",
+  "short_name": "Japan Kit",
+  "description": "Offline Japanese phrasebook and flashcard app for travel and business",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1c1c1e",
+  "theme_color": "#1c1c1e",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Personal Phrases",
+      "url": "./index.html#personal",
+      "description": "Travel and conversation phrases"
+    },
+    {
+      "name": "Business Phrases",
+      "url": "./index.html#business",
+      "description": "Startup and business phrases"
+    }
+  ]
+}
